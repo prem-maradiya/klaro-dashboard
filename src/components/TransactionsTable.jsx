@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Pencil } from "lucide-react";
 import {
   categoryColor,
   formatDateTime,
@@ -19,6 +20,7 @@ export default function TransactionsTable({
   limit,
   title = "Recent transactions",
   scroll = false,
+  onEdit,
 }) {
   const rows = limit ? transactions.slice(0, limit) : transactions;
 
@@ -60,7 +62,8 @@ export default function TransactionsTable({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                  className="group"
+                  className={`group ${onEdit ? "cursor-pointer" : ""}`}
+                  onClick={onEdit ? () => onEdit(t) : undefined}
                 >
                   <td className="border-b border-border px-2 py-3 group-hover:bg-surface">
                     <div className="flex items-center gap-[11px]">
@@ -90,7 +93,15 @@ export default function TransactionsTable({
                     {formatDateTime(t.date)}
                   </td>
                   <td className="num border-b border-border px-2 py-3 text-right text-[13px] font-bold group-hover:bg-surface">
-                    −{formatINR(t.amount)}
+                    <span className="inline-flex items-center gap-2">
+                      {onEdit && (
+                        <Pencil
+                          size={12}
+                          className="text-muted2 opacity-0 transition-opacity group-hover:opacity-100"
+                        />
+                      )}
+                      −{formatINR(t.amount)}
+                    </span>
                   </td>
                 </motion.tr>
               );

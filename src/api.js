@@ -69,6 +69,16 @@ export const api = {
   deleteExpense: (id) => http(`/expenses/${id}`, { method: "DELETE" }),
   summary: (month) =>
     http(`/summary${month ? `?month=${encodeURIComponent(month)}` : ""}`),
+  // Budgets: monthly limits keyed by category, "overall" caps the whole month.
+  budgetsStatus: (month) =>
+    http(`/budgets/status${month ? `?month=${encodeURIComponent(month)}` : ""}`),
+  putBudget: (category, amount) =>
+    http(`/budgets/${encodeURIComponent(category)}`, {
+      method: "PUT",
+      body: JSON.stringify({ amount }),
+    }),
+  deleteBudget: (category) =>
+    http(`/budgets/${encodeURIComponent(category)}`, { method: "DELETE" }),
 };
 
 // Probe a candidate connection without saving it.

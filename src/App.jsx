@@ -13,6 +13,8 @@ import SpendingChart from "./components/SpendingChart";
 import CategoryDonut from "./components/CategoryDonut";
 import TransactionsTable from "./components/TransactionsTable";
 import LabelQueue from "./components/LabelQueue";
+import EditExpenseModal from "./components/EditExpenseModal";
+import BudgetsCard from "./components/BudgetsCard";
 
 // Build an SVG polyline (62x26 viewBox) from a numeric array.
 function sparkPoints(values) {
@@ -31,10 +33,24 @@ function sparkPoints(values) {
 }
 
 export default function App() {
-  const { expenses, months, selected, selectMonth, source, reload, labelExpense } =
-    useExpenses();
+  const {
+    expenses,
+    months,
+    selected,
+    selectMonth,
+    source,
+    reload,
+    labelExpense,
+    updateExpense,
+    deleteExpense,
+  } = useExpenses();
   const [nav, setNav] = useState("overview");
   const [search, setSearch] = useState("");
+  const [editing, setEditing] = useState(null); // transaction being edited
+
+  const selectedKey = selected
+    ? `${selected.year}-${String(selected.month + 1).padStart(2, "0")}`
+    : null;
 
   const a = useMemo(() => computeAnalytics(expenses, selected), [expenses, selected]);
 
@@ -145,18 +161,22 @@ export default function App() {
           {/* CARD vs UPI SPLIT */}
           <MethodSplit upi={a.upiTotal} card={a.cardTotal} total={a.total} />
 
+          {/* BUDGETS */}
+          <BudgetsCard monthKey={selectedKey} source={source} />
+
           {/* CHART ROW */}
           <div className="mb-[18px] grid grid-cols-[1.9fr_1fr] gap-3.5">
             <SpendingChart series={a.series} monthName={a.monthName} />
             <CategoryDonut categories={a.categories} total={a.total} />
           </div>
 
-          {/* TRANSACTIONS (full month list, searchable) */}
+          {/* TRANSACTIONS (full month list, searchable, click to edit) */}
           <div className="mb-[18px]">
             <TransactionsTable
               transactions={filteredTx}
               title={search ? "Search results" : `Transactions · ${a.monthLabel}`}
               scroll
+              onEdit={setEditing}
             />
           </div>
 
@@ -164,6 +184,13 @@ export default function App() {
           <LabelQueue unlabeled={a.unlabeled} onLabel={labelExpense} />
         </div>
       </main>
+
+      <EditExpenseModal
+        expense={editing}
+        onClose={() => setEditing(null)}
+        onSave={updateExpense}
+        onDelete={deleteExpense}
+      />
     </div>
   );
 }

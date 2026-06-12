@@ -97,6 +97,41 @@ export function useExpenses() {
     [source]
   );
 
+  // Edit any expense (rename/recategorize). Optimistic; the backend PATCH also
+  // feeds rename-learning so future SMS parse to the corrected name.
+  const updateExpense = useCallback(
+    async (id, { merchant, category }) => {
+      setExpenses((prev) =>
+        prev.map((e) =>
+          e.id === id ? { ...e, merchant, category, is_labeled: true } : e
+        )
+      );
+      if (source === "live") {
+        try {
+          await api.updateExpense(id, { merchant, category, is_labeled: true });
+        } catch {
+          /* keep optimistic state; backend reconciles on next load */
+        }
+      }
+    },
+    [source]
+  );
+
+  // Delete an expense. Optimistic removal.
+  const deleteExpense = useCallback(
+    async (id) => {
+      setExpenses((prev) => prev.filter((e) => e.id !== id));
+      if (source === "live") {
+        try {
+          await api.deleteExpense(id);
+        } catch {
+          /* row returns on next load if the delete didn't land */
+        }
+      }
+    },
+    [source]
+  );
+
   return {
     expenses,
     months,
@@ -107,5 +142,7 @@ export function useExpenses() {
     error,
     reload,
     labelExpense,
+    updateExpense,
+    deleteExpense,
   };
 }
