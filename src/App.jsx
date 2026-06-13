@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { IndianRupee, ArrowLeftRight, PieChart, Clock, CreditCard, Smartphone } from "lucide-react";
+import { IndianRupee, ArrowLeftRight, PieChart, Clock, CreditCard, Smartphone, ArrowDownLeft, ArrowUpRight } from "lucide-react";
 
 import { useExpenses } from "./hooks/useExpenses";
 import { computeAnalytics } from "./lib/analytics";
@@ -159,6 +159,9 @@ export default function App() {
             </KpiCard>
           </div>
 
+          {/* CASH FLOW (money in vs out, net) */}
+          <CashFlow income={a.income} spending={a.total} net={a.net} />
+
           {/* CARD vs UPI SPLIT */}
           <MethodSplit upi={a.upiTotal} card={a.cardTotal} total={a.total} />
 
@@ -192,6 +195,49 @@ export default function App() {
         onSave={updateExpense}
         onDelete={deleteExpense}
       />
+    </div>
+  );
+}
+
+function CashFlow({ income, spending, net }) {
+  const inflow = income || 0;
+  const outflow = spending || 0;
+  const max = Math.max(inflow, outflow, 1);
+  const positive = net >= 0;
+  return (
+    <div className="mb-[18px] rounded-card border border-border bg-card p-[18px]">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-[14px] font-semibold">Cash flow</h3>
+        <span className="text-[12px] text-muted">
+          Net{" "}
+          <span className="num font-semibold" style={{ color: positive ? "#4CB782" : "#E5484D" }}>
+            {positive ? "+" : "−"}
+            {formatINR(Math.abs(net))}
+          </span>
+        </span>
+      </div>
+      <div className="space-y-3">
+        <FlowRow icon={ArrowDownLeft} label="Money in" value={inflow} pct={(inflow / max) * 100} color="#4CB782" />
+        <FlowRow icon={ArrowUpRight} label="Money out" value={outflow} pct={(outflow / max) * 100} color="#828FFF" />
+      </div>
+    </div>
+  );
+}
+
+function FlowRow({ icon: Icon, label, value, pct, color }) {
+  return (
+    <div>
+      <div className="mb-1 flex items-center justify-between text-[12px]">
+        <span className="flex items-center gap-1.5 text-muted">
+          <Icon size={13} style={{ color }} /> {label}
+        </span>
+        <span className="num font-semibold" style={{ color }}>
+          {formatINR(value)}
+        </span>
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-surface2">
+        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
+      </div>
     </div>
   );
 }

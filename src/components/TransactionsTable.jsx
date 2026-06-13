@@ -56,6 +56,7 @@ export default function TransactionsTable({
           <tbody>
             {rows.map((t, i) => {
               const color = categoryColor(t.category || "Other");
+              const isIncome = t.direction === "credit";
               return (
                 <motion.tr
                   key={t.id ?? i}
@@ -92,7 +93,10 @@ export default function TransactionsTable({
                   <td className="border-b border-border px-2 py-3 text-[12px] text-muted group-hover:bg-surface">
                     {formatDateTime(t.date)}
                   </td>
-                  <td className="num border-b border-border px-2 py-3 text-right text-[13px] font-bold group-hover:bg-surface">
+                  <td
+                    className="num border-b border-border px-2 py-3 text-right text-[13px] font-bold group-hover:bg-surface"
+                    style={isIncome ? { color: "#4CB782" } : undefined}
+                  >
                     <span className="inline-flex items-center gap-2">
                       {onEdit && (
                         <Pencil
@@ -100,7 +104,8 @@ export default function TransactionsTable({
                           className="text-muted2 opacity-0 transition-opacity group-hover:opacity-100"
                         />
                       )}
-                      −{formatINR(t.amount)}
+                      {isIncome ? "+" : "−"}
+                      {formatINR(t.amount)}
                     </span>
                   </td>
                 </motion.tr>

@@ -36,22 +36,30 @@ export function computeAnalytics(expenses, target) {
   const thisMonth = labeled.filter((e) => inMonth(e, 0));
   const lastMonth = labeled.filter((e) => inMonth(e, -1));
 
-  const total = thisMonth.reduce((s, e) => s + e.amount, 0);
-  const lastTotal = lastMonth.reduce((s, e) => s + e.amount, 0);
+  // Spending is debits; income is credits. Rows predating income tracking have
+  // no `direction` and count as debits (spending), so old totals are unchanged.
+  const isIncome = (e) => e.direction === "credit";
+  const thisMonthSpend = thisMonth.filter((e) => !isIncome(e));
+  const lastMonthSpend = lastMonth.filter((e) => !isIncome(e));
+
+  const total = thisMonthSpend.reduce((s, e) => s + e.amount, 0);
+  const income = thisMonth.filter(isIncome).reduce((s, e) => s + e.amount, 0);
+  const net = income - total;
+  const lastTotal = lastMonthSpend.reduce((s, e) => s + e.amount, 0);
   const totalDelta = lastTotal > 0 ? ((total - lastTotal) / lastTotal) * 100 : 0;
 
   const txCount = thisMonth.length;
   const lastTxCount = lastMonth.length;
 
-  // card vs UPI split for the month
-  const cardTotal = thisMonth
+  // card vs UPI split for the month (spending only)
+  const cardTotal = thisMonthSpend
     .filter((e) => e.method === "card")
     .reduce((s, e) => s + e.amount, 0);
   const upiTotal = total - cardTotal;
 
-  // category totals
+  // category totals (spending only — income is never a spend category)
   const byCat = {};
-  for (const e of thisMonth) {
+  for (const e of thisMonthSpend) {
     const c = e.category || "Other";
     byCat[c] = (byCat[c] || 0) + e.amount;
   }
@@ -68,7 +76,7 @@ export function computeAnalytics(expenses, target) {
   // per-day series for the selected month
   const series = [];
   for (let d = 1; d <= daysInMonth; d++) {
-    const dayTotal = thisMonth
+    const dayTotal = thisMonthSpend
       .filter((e) => new Date(e.date).getDate() === d)
       .reduce((s, e) => s + e.amount, 0);
     series.push({ day: d, label: `${MONTHS[curMonth]} ${d}`, amount: Math.round(dayTotal) });
@@ -79,6 +87,8 @@ export function computeAnalytics(expenses, target) {
 
   return {
     total,
+    income,
+    net,
     totalDelta,
     txCount,
     txDelta: txCount - lastTxCount,
