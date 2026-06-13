@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Search, Calendar, ChevronDown, RefreshCw } from "lucide-react";
 import { monthLabel } from "../lib/analytics";
 import ConnectionSettings from "./ConnectionSettings";
+import ExportMenu from "./ExportMenu";
 
 export default function TopBar({
   title,
@@ -13,6 +14,7 @@ export default function TopBar({
   onSearch,
   source,
   onReload,
+  monthKey,
 }) {
   const isLive = source === "live";
   const [open, setOpen] = useState(false);
@@ -78,6 +80,9 @@ export default function TopBar({
           </div>
         )}
       </div>
+
+      {/* CSV export */}
+      <ExportMenu monthKey={monthKey} year={selected?.year} disabled={source !== "live"} />
 
       {/* Sync status */}
       <button

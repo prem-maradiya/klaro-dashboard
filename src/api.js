@@ -31,6 +31,19 @@ function authHeaders(key) {
   };
 }
 
+// Download a binary/text response (e.g. the CSV export) as a Blob. The API key
+// must travel in the header, so we can't just point the browser at the URL —
+// we fetch with auth, then hand back a Blob + the server's suggested filename.
+async function downloadBlob(path) {
+  const { url, key } = getConnection();
+  const res = await fetch(`${url}${path}`, { headers: authHeaders(key) });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  const blob = await res.blob();
+  const cd = res.headers.get("Content-Disposition") || "";
+  const m = cd.match(/filename="?([^"]+)"?/i);
+  return { blob, filename: m ? m[1] : "klaro-export.csv" };
+}
+
 async function http(path, options = {}) {
   const { url, key } = getConnection();
   // Abort slow/unreachable requests so the UI can fall back to demo data.
@@ -79,6 +92,15 @@ export const api = {
     }),
   deleteBudget: (category) =>
     http(`/budgets/${encodeURIComponent(category)}`, { method: "DELETE" }),
+  // CSV export. Pass {month:"YYYY-MM"} or {year:2026} or nothing (all time).
+  // Resolves to { blob, filename } — the caller triggers the browser download.
+  exportCsv: ({ month, year } = {}) => {
+    const params = new URLSearchParams();
+    if (month) params.set("month", month);
+    else if (year) params.set("year", String(year));
+    const q = params.toString();
+    return downloadBlob(`/export${q ? `?${q}` : ""}`);
+  },
 };
 
 // Probe a candidate connection without saving it.
