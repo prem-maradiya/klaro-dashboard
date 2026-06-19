@@ -15,6 +15,7 @@ import TransactionsTable from "./components/TransactionsTable";
 import LabelQueue from "./components/LabelQueue";
 import EditExpenseModal from "./components/EditExpenseModal";
 import BudgetsCard from "./components/BudgetsCard";
+import RecurringCard from "./components/RecurringCard";
 
 // Build an SVG polyline (62x26 viewBox) from a numeric array.
 function sparkPoints(values) {
@@ -167,6 +168,9 @@ export default function App() {
 
           {/* BUDGETS */}
           <BudgetsCard monthKey={selectedKey} source={source} />
+
+          {/* RECURRING / UPCOMING PAYMENTS */}
+          <RecurringCard source={source} />
 
           {/* CHART ROW */}
           <div className="mb-[18px] grid grid-cols-[1.9fr_1fr] gap-3.5">

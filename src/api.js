@@ -92,6 +92,8 @@ export const api = {
     }),
   deleteBudget: (category) =>
     http(`/budgets/${encodeURIComponent(category)}`, { method: "DELETE" }),
+  // Detected recurring payments (subscriptions/EMIs) with next-due dates.
+  recurring: () => http("/recurring"),
   // CSV export. Pass {month:"YYYY-MM"} or {year:2026} or nothing (all time).
   // Resolves to { blob, filename } — the caller triggers the browser download.
   exportCsv: ({ month, year } = {}) => {
