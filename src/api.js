@@ -94,6 +94,17 @@ export const api = {
     http(`/budgets/${encodeURIComponent(category)}`, { method: "DELETE" }),
   // Detected recurring payments (subscriptions/EMIs) with next-due dates.
   recurring: () => http("/recurring"),
+  // Dismiss a detected recurring payment ("I cancelled this"); excluded from
+  // /recurring until restored. Keyed server-side on the normalized merchant.
+  dismissRecurring: (merchant) =>
+    http("/recurring/dismiss", {
+      method: "POST",
+      body: JSON.stringify({ merchant }),
+    }),
+  restoreRecurring: (merchant) =>
+    http(`/recurring/dismiss/${encodeURIComponent(merchant)}`, {
+      method: "DELETE",
+    }),
   // CSV export. Pass {month:"YYYY-MM"} or {year:2026} or nothing (all time).
   // Resolves to { blob, filename } — the caller triggers the browser download.
   exportCsv: ({ month, year } = {}) => {
