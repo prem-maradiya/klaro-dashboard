@@ -24,10 +24,16 @@ export function saveConnection(url, key) {
   else localStorage.removeItem(KEY_KEY);
 }
 
+import { getAccessToken } from "./lib/supabase";
+
 function authHeaders(key) {
+  // During the Phase 7 cutover send both: the Supabase JWT (multi-tenant API)
+  // and the legacy X-API-Key (old API). Each backend ignores the other's header.
+  const token = getAccessToken();
   return {
     "Content-Type": "application/json",
     ...(key ? { "X-API-Key": key } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 }
 

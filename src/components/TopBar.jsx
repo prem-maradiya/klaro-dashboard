@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Search, Calendar, ChevronDown, RefreshCw } from "lucide-react";
+import { Search, Calendar, ChevronDown, RefreshCw, LogOut } from "lucide-react";
 import { monthLabel } from "../lib/analytics";
+import { supabase } from "../lib/supabase";
 import ConnectionSettings from "./ConnectionSettings";
 import ExportMenu from "./ExportMenu";
 
@@ -103,6 +104,26 @@ export default function TopBar({
 
       {/* Backend connection (URL + API key) */}
       <ConnectionSettings onSaved={onReload} />
+
+      {/* Account */}
+      <AccountMenu />
     </div>
+  );
+}
+
+function AccountMenu() {
+  const [email, setEmail] = useState(null);
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+  }, []);
+  return (
+    <button
+      onClick={() => supabase.auth.signOut()}
+      title={email ? `Signed in as ${email} — click to sign out` : "Sign out"}
+      className="flex items-center gap-2 rounded-lg border border-border2 bg-surface px-3 py-[7px] text-[12.5px] text-muted transition-colors hover:text-text"
+    >
+      <LogOut size={13} />
+      Sign out
+    </button>
   );
 }
