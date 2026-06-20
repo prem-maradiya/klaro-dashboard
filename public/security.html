@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Klaro — Security</title>
+  <style>
+    :root { --ink:#0A0A12; --surface:#14141F; --line:#23233A; --violet:#8B7CFF; --text:#ECEAF7; --muted:#8D8AA8; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--ink); color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif; line-height:1.65; font-size:16px; }
+    .wrap { max-width:760px; margin:0 auto; padding:56px 22px 96px; }
+    h1 { font-size:30px; margin:0 0 6px; letter-spacing:-0.02em; }
+    h2 { font-size:19px; margin:34px 0 10px; color:#fff; }
+    .meta { color:var(--muted); font-size:14px; margin-bottom:28px; }
+    p, li { color:#cfcde4; }
+    a { color:var(--violet); }
+    ul { padding-left:20px; } li { margin:7px 0; }
+    strong { color:var(--text); }
+    .brand { display:flex; align-items:center; gap:10px; margin-bottom:30px; }
+    .brand .k { width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,#7C5CFF,#4B7BFF);
+      display:grid; place-items:center; font-weight:700; color:#fff; }
+    footer { margin-top:48px; color:var(--muted); font-size:13px; border-top:1px solid var(--line); padding-top:20px; }
+    footer a { margin-right:14px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand"><div class="k">K</div><strong>Klaro</strong></div>
+    <h1>Security</h1>
+    <div class="meta">Last updated: 20 June 2026</div>
+
+    <p>
+      Klaro handles financial data, so security is built into how it's designed.
+      Here's a plain-language overview of how your data is protected.
+    </p>
+
+    <h2>Per-user isolation</h2>
+    <ul>
+      <li>Every record is tied to your account and protected by database <strong>row-level security</strong> — the database itself refuses to return one user's data to another, even if application code had a bug.</li>
+      <li>Every API request is authenticated and scoped to the signed-in user; cross-account access returns "not found."</li>
+    </ul>
+
+    <h2>Authentication</h2>
+    <ul>
+      <li>Sign-in is handled by <strong>Supabase Auth</strong>; passwords are hashed (never stored in plain text), and email verification is required.</li>
+      <li>Sessions use short-lived, signed access tokens (JWTs) that are verified on every request against a public key — no shared secret lives in the app server.</li>
+    </ul>
+
+    <h2>Data in transit &amp; at rest</h2>
+    <ul>
+      <li>All traffic between the apps and the server uses <strong>HTTPS/TLS</strong>.</li>
+      <li>Data is stored in managed Postgres (Supabase) with encryption at rest and regular automated backups.</li>
+      <li>On your phone, data is cached locally so the app works offline; uninstalling removes it.</li>
+    </ul>
+
+    <h2>Minimal data &amp; no tracking</h2>
+    <ul>
+      <li>Klaro stores only what it needs to show your spending. No advertising SDKs, no third-party analytics or trackers.</li>
+      <li>Optional AI categorization sends only a <strong>merchant name</strong> (never amounts, account numbers, or message text) to classify an unfamiliar merchant.</li>
+    </ul>
+
+    <h2>Secrets</h2>
+    <p>
+      API keys and database credentials live only in the server's environment
+      configuration — never in the app bundle or the public code repositories.
+    </p>
+
+    <h2>Reporting a vulnerability</h2>
+    <p>
+      Found a security issue? Please email
+      <a href="mailto:premmaradiya333@gmail.com?subject=Klaro%20security%20report">premmaradiya333@gmail.com</a>
+      with details. We appreciate responsible disclosure and will respond promptly.
+    </p>
+
+    <footer>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/data-deletion.html">Data Deletion</a>
+      <a href="/security.html">Security</a>
+      <a href="/help.html">Help</a>
+      <div style="margin-top:10px">Klaro · Personal expense tracker</div>
+    </footer>
+  </div>
+</body>
+</html>

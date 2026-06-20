@@ -190,6 +190,17 @@ export default function App() {
 
           {/* LABEL QUEUE */}
           <LabelQueue unlabeled={a.unlabeled} onLabel={labelExpense} />
+
+          {/* FOOTER — legal & support */}
+          <footer className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border pt-5 text-[12px] text-muted2">
+            <span className="text-muted">Klaro</span>
+            <a href="/privacy.html" target="_blank" rel="noreferrer" className="hover:text-text">Privacy</a>
+            <a href="/terms.html" target="_blank" rel="noreferrer" className="hover:text-text">Terms</a>
+            <a href="/data-deletion.html" target="_blank" rel="noreferrer" className="hover:text-text">Data deletion</a>
+            <a href="/security.html" target="_blank" rel="noreferrer" className="hover:text-text">Security</a>
+            <a href="/help.html" target="_blank" rel="noreferrer" className="hover:text-text">Help</a>
+            <a href="mailto:premmaradiya333@gmail.com?subject=Klaro%20support" className="hover:text-text">Contact support</a>
+          </footer>
         </div>
       </main>
 
