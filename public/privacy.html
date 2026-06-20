@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Klaro — Privacy Policy</title>
+  <style>
+    :root {
+      --ink: #0A0A12; --surface: #14141F; --line: #23233A;
+      --violet: #8B7CFF; --text: #ECEAF7; --muted: #8D8AA8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--ink); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+      line-height: 1.65; font-size: 16px;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 56px 22px 96px; }
+    h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.02em; }
+    h2 { font-size: 19px; margin: 38px 0 10px; color: #fff; }
+    .meta { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+    p, li { color: #cfcde4; }
+    a { color: var(--violet); }
+    ul { padding-left: 20px; }
+    li { margin: 6px 0; }
+    .card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 16px; padding: 18px 20px; margin: 18px 0;
+    }
+    strong { color: var(--text); }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+    .brand .k {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, #7C5CFF, #4B7BFF);
+      display: grid; place-items: center; font-weight: 700; color: #fff;
+    }
+    footer { margin-top: 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand"><div class="k">K</div><strong>Klaro</strong></div>
+    <h1>Privacy Policy</h1>
+    <div class="meta">Last updated: 20 June 2026</div>
+
+    <p>
+      Klaro is a personal expense tracker that reads your bank's transaction SMS
+      messages to automatically log what you spend. This policy explains exactly
+      what data Klaro handles, where it goes, and the choices you have. In short:
+      <strong>your financial data stays yours</strong> — it is never sold, never
+      shared with advertisers, and never used for any purpose other than showing
+      you your own spending.
+    </p>
+
+    <h2>1. What Klaro reads</h2>
+    <div class="card">
+      <p>
+        With your permission, Klaro reads <strong>SMS messages on your device</strong>
+        and parses the ones that look like bank or payment alerts. From a matching
+        message it extracts only:
+      </p>
+      <ul>
+        <li>the <strong>amount</strong> and whether it was money in or out;</li>
+        <li>the <strong>merchant / payee name</strong> and any UPI ID present;</li>
+        <li>the <strong>date and time</strong> of the transaction;</li>
+        <li>the original message text, kept so duplicate alerts aren't counted twice.</li>
+      </ul>
+      <p>
+        Messages that are not transaction alerts (personal texts, OTPs, promotions)
+        are ignored and never stored. Klaro does not send your SMS inbox anywhere.
+      </p>
+    </div>
+
+    <h2>2. Where your data is stored</h2>
+    <p>
+      Transactions are stored <strong>on your device</strong>. If you choose to
+      connect a backend (the optional sync server you configure in Settings), your
+      transactions are also sent to <strong>that server, which you control</strong>,
+      so the same data appears on the companion web dashboard. Klaro has no shared
+      central database — there is no Klaro account, and the developer cannot see
+      your data.
+    </p>
+
+    <h2>3. Permissions and why they're needed</h2>
+    <div class="card">
+      <ul>
+        <li><strong>SMS (read / receive):</strong> the core feature — to detect and
+          parse bank transaction alerts as they arrive and when you run a catch-up
+          scan. This is the only way Klaro can log spending automatically.</li>
+        <li><strong>Contacts (optional):</strong> only to show a friendly name when a
+          payment is to or from someone in your contacts. Reads names locally; never
+          uploads your contacts.</li>
+        <li><strong>Notifications:</strong> to alert you when a new transaction is
+          captured or a budget threshold is reached.</li>
+      </ul>
+    </div>
+
+    <h2>4. Optional AI categorization</h2>
+    <p>
+      To suggest a category for an unfamiliar merchant, Klaro can send the
+      <strong>merchant name only</strong> (e.g. "Blue Tokai Coffee") to Google's
+      Gemini API. No amounts, dates, account numbers, or message text are sent, and
+      this only happens for merchants that can't be categorized locally. If no AI
+      key is configured, this feature is simply off.
+    </p>
+
+    <h2>5. What Klaro never does</h2>
+    <ul>
+      <li>No selling or renting of your data — ever.</li>
+      <li>No advertising networks and no third-party analytics or tracking SDKs.</li>
+      <li>No sharing of your transactions with anyone other than the backend you set up.</li>
+    </ul>
+
+    <h2>6. Your control</h2>
+    <p>
+      You can delete any transaction inside the app, revoke the SMS or Contacts
+      permission at any time in your device settings, or uninstall Klaro to remove
+      all on-device data. If you use a backend, you control that server and can clear
+      it directly.
+    </p>
+
+    <h2>7. Children</h2>
+    <p>Klaro is not directed at children under 13 and does not knowingly collect their data.</p>
+
+    <h2>8. Changes</h2>
+    <p>
+      If this policy changes, the "Last updated" date above will change and the new
+      version will be posted at this URL.
+    </p>
+
+    <h2>9. Contact</h2>
+    <p>
+      Questions about privacy? Email
+      <a href="mailto:premmaradiya333@gmail.com">premmaradiya333@gmail.com</a>.
+    </p>
+
+    <footer>Klaro · Personal expense tracker · This page is served as a static document and runs no scripts.</footer>
+  </div>
+</body>
+</html>
