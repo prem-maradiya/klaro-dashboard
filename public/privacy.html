@@ -41,15 +41,16 @@
   <div class="wrap">
     <div class="brand"><div class="k">K</div><strong>Klaro</strong></div>
     <h1>Privacy Policy</h1>
-    <div class="meta">Last updated: 20 June 2026</div>
+    <div class="meta">Last updated: 18 July 2026</div>
 
     <p>
       Klaro is a personal expense tracker that reads your bank's transaction SMS
       messages to automatically log what you spend. This policy explains exactly
       what data Klaro handles, where it goes, and the choices you have. In short:
-      <strong>your financial data stays yours</strong> — it is never sold, never
-      shared with advertisers, and never used for any purpose other than showing
-      you your own spending.
+      your bank messages are read and understood <strong>entirely on your
+      phone</strong>, and <strong>your financial data stays yours</strong> — it is
+      never sold, never shared with advertisers, and never used for any purpose
+      other than showing you your own spending.
     </p>
 
     <h2>1. What Klaro reads</h2>
@@ -62,24 +63,43 @@
       <ul>
         <li>the <strong>amount</strong> and whether it was money in or out;</li>
         <li>the <strong>merchant / payee name</strong> and any UPI ID present;</li>
-        <li>the <strong>date and time</strong> of the transaction;</li>
-        <li>the original message text, kept so duplicate alerts aren't counted twice.</li>
+        <li>the <strong>date and time</strong> of the transaction.</li>
       </ul>
       <p>
-        Messages that are not transaction alerts (personal texts, OTPs, promotions)
-        are ignored and never stored. Klaro does not send your SMS inbox anywhere.
+        The original message text is kept <strong>on your device only</strong> (so
+        duplicate alerts aren't counted twice) and is never uploaded. Messages that
+        are not transaction alerts (personal texts, OTPs, promotions) are ignored
+        and never stored. Klaro does not send your SMS inbox anywhere.
       </p>
     </div>
 
-    <h2>2. Where your data is stored</h2>
+    <h2>2. What stays on your device, and what syncs</h2>
     <p>
-      Transactions are stored <strong>on your device</strong>. If you choose to
-      connect a backend (the optional sync server you configure in Settings), your
-      transactions are also sent to <strong>that server, which you control</strong>,
-      so the same data appears on the companion web dashboard. Klaro has no shared
-      central database — there is no Klaro account, and the developer cannot see
-      your data.
+      Every bank message is read and parsed <strong>entirely on your device</strong>.
+      The raw SMS text, your account numbers, your balance and UPI IDs
+      <strong>never leave your phone</strong> — there is no cloud parsing and no AI.
     </p>
+    <div class="card">
+      <p>
+        So that your data appears on the companion <strong>web dashboard</strong> and
+        can be restored if you reinstall, Klaro syncs only the <strong>cleaned
+        transaction list</strong> to its backend:
+      </p>
+      <ul>
+        <li>merchant / payee name, amount, category, and date;</li>
+        <li>a one-way <strong>hash</strong> of the message, used solely to avoid
+          counting the same transaction twice — it cannot be reversed back into the
+          original message.</li>
+      </ul>
+      <p>
+        The raw message text, account numbers and balances are
+        <strong>never uploaded</strong>. This cleaned data is stored on Klaro's
+        server so it can be shown back to you on your phone and the web dashboard; it
+        is used only to run the app for you, and is never sold or shared. You can
+        delete it at any time — see the <a href="/data-deletion.html">Data
+        Deletion</a> page.
+      </p>
+    </div>
 
     <h2>3. Permissions and why they're needed</h2>
     <div class="card">
@@ -95,20 +115,22 @@
       </ul>
     </div>
 
-    <h2>4. Optional AI categorization</h2>
+    <h2>4. How categorization works</h2>
     <p>
-      To suggest a category for an unfamiliar merchant, Klaro can send the
-      <strong>merchant name only</strong> (e.g. "Blue Tokai Coffee") to Google's
-      Gemini API. No amounts, dates, account numbers, or message text are sent, and
-      this only happens for merchants that can't be categorized locally. If no AI
-      key is configured, this feature is simply off.
+      Klaro guesses a category (Food, Transport, …) using a <strong>fixed built-in
+      list</strong> of known merchants and keywords, plus what you've taught it by
+      correcting past entries. This uses only the <strong>merchant name</strong>
+      (which is already part of your transaction) — <strong>no AI service and no
+      third party</strong> is ever involved, and your message text is never used for
+      it.
     </p>
 
     <h2>5. What Klaro never does</h2>
     <ul>
+      <li>Never sends your raw SMS, account numbers, balances or UPI IDs off your device.</li>
+      <li>No AI service or other third party ever processes your messages.</li>
       <li>No selling or renting of your data — ever.</li>
       <li>No advertising networks and no third-party analytics or tracking SDKs.</li>
-      <li>No sharing of your transactions with anyone other than the backend you set up.</li>
     </ul>
 
     <h2>6. Your control</h2>
@@ -123,9 +145,9 @@
     <p>
       Klaro uses an account (email + password, or Google sign-in) so your data is
       private to you and available across your phone and the web dashboard. We store
-      your email and an encrypted authentication record — nothing more about your
-      identity. You can delete your account and all data at any time; see the
-      <a href="/data-deletion.html">Data Deletion</a> page.
+      your email, an encrypted authentication record, and the cleaned transactions
+      you sync (section 2) — nothing more. You can delete your account and all data
+      at any time; see the <a href="/data-deletion.html">Data Deletion</a> page.
     </p>
 
     <h2>8. Children</h2>

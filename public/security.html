@@ -28,12 +28,19 @@
   <div class="wrap">
     <div class="brand"><div class="k">K</div><strong>Klaro</strong></div>
     <h1>Security</h1>
-    <div class="meta">Last updated: 20 June 2026</div>
+    <div class="meta">Last updated: 18 July 2026</div>
 
     <p>
       Klaro handles financial data, so security is built into how it's designed.
       Here's a plain-language overview of how your data is protected.
     </p>
+
+    <h2>On-device parsing</h2>
+    <ul>
+      <li>Your bank SMS is read and understood <strong>entirely on your phone</strong>. The raw message, account numbers, balances and UPI IDs <strong>never leave the device</strong>.</li>
+      <li>Only the <strong>cleaned transaction</strong> (merchant, amount, category, date) is synced, plus a one-way hash used to avoid counting a transaction twice. The hash cannot be reversed into the original message.</li>
+      <li>The strongest protection is not holding the data at all — a server that never receives your messages cannot leak them.</li>
+    </ul>
 
     <h2>Per-user isolation</h2>
     <ul>
@@ -57,7 +64,7 @@
     <h2>Minimal data &amp; no tracking</h2>
     <ul>
       <li>Klaro stores only what it needs to show your spending. No advertising SDKs, no third-party analytics or trackers.</li>
-      <li>Optional AI categorization sends only a <strong>merchant name</strong> (never amounts, account numbers, or message text) to classify an unfamiliar merchant.</li>
+      <li>Categorization runs against a <strong>built-in list</strong> of merchants and keywords plus your own past corrections — <strong>no AI service or other third party</strong> ever processes your data.</li>
     </ul>
 
     <h2>Secrets</h2>
