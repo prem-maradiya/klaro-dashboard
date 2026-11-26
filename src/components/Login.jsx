@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, LoaderCircle } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, LoaderCircle, ArrowLeft } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 // Email/password + Google sign-in for the dashboard. On success the auth gate
 // (AuthGate) swaps to the app — this screen doesn't navigate itself.
-export default function Login() {
+//
+// `onBack` is optional: when AuthGate reached this from the landing page it
+// passes a way back, so the sign-in form is not a dead end for a visitor who
+// only meant to look around.
+export default function Login({ onBack }) {
   const [signUp, setSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,6 +69,14 @@ export default function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg px-4">
       <div className="w-full max-w-[380px]">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="mb-5 flex items-center gap-1.5 text-[12.5px] text-muted hover:text-text"
+          >
+            <ArrowLeft size={14} /> Back
+          </button>
+        )}
         <div className="mb-7 text-center">
           <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl text-[20px] font-bold text-white"
                style={{ background: "linear-gradient(135deg,#5E6AD2,#828FFF)" }}>
