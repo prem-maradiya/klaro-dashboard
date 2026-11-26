@@ -1,18 +1,34 @@
-// Demo data used when the backend is unreachable or has no expenses yet,
-// so the dashboard always looks alive. Replaced by real data when available.
+// Demo data used when the backend is unreachable or has no expenses yet, and
+// for the public demo reached from the landing page, so the dashboard always
+// looks alive. Replaced by real data when available.
 
-const mk = (id, merchant, amount, day, hour, min, category, upi, labeled = true) => ({
-  id,
-  merchant,
-  amount,
-  date: new Date(2026, 4, day, hour, min).toISOString(), // month 4 = May
-  raw_sms: `Rs.${amount} debited from a/c XX1234 to VPA ${upi}`,
-  upi_id: upi,
-  is_labeled: labeled,
-  category: labeled ? category : null,
-});
+// These dates used to be pinned to May 2026, which meant the demo drifted
+// further out of date every month — by November it opened on a six-month-old
+// month and looked abandoned. Instead the `day` column below (2..28) is read as
+// a position in a rolling 28-day window ending today: day 28 is today, day 2 is
+// 26 days ago. The demo therefore always shows the current month, never dates a
+// transaction in the future, and usually spans a month boundary, which has the
+// side benefit of exercising the month picker and the month-over-month deltas.
+const DAY_SPAN = 28;
 
-export const DEMO_EXPENSES = [
+const mk = (id, merchant, amount, day, hour, min, category, upi, labeled = true) => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - (DAY_SPAN - day));
+  d.setHours(hour, min, 0, 0);
+  return {
+    id,
+    merchant,
+    amount,
+    date: d.toISOString(),
+    raw_sms: `Rs.${amount} debited from a/c XX1234 to VPA ${upi}`,
+    upi_id: upi,
+    is_labeled: labeled,
+    category: labeled ? category : null,
+  };
+};
+
+const RECENT = [
   mk(1, "Zomato", 486, 28, 20, 42, "Food", "zomato@icici"),
   mk(2, "Blinkit", 724, 28, 13, 10, "Grocery", "blinkit@hdfc"),
   mk(3, "Uber", 212, 27, 21, 5, "Transport", "uber@axis"),
@@ -46,3 +62,23 @@ export const DEMO_EXPENSES = [
   mk(30, "paytmqr281@paytm", 60, 27, 18, 48, null, "paytmqr281@paytm", false),
   mk(31, "9824xxxx12@ybl", 500, 25, 15, 22, null, "9824xxxx12@ybl", false),
 ];
+
+// A full previous month, shifted back from the rolling window above with
+// slightly lighter spending. Without it the previous month holds only the day
+// or two the 28-day window happens to reach into, which made the headline read
+// a nonsensical "+3015% vs prev month". With it the month picker has two real
+// months to switch between and the deltas land on believable numbers.
+// Only labeled rows are carried back, so the "needs labeling" queue stays a
+// short, current list rather than a pile of month-old items.
+const EARLIER = RECENT.filter((e) => e.is_labeled).map((e) => {
+  const d = new Date(e.date);
+  d.setMonth(d.getMonth() - 1);
+  return {
+    ...e,
+    id: e.id + 100,
+    amount: Math.round(e.amount * 0.88),
+    date: d.toISOString(),
+  };
+});
+
+export const DEMO_EXPENSES = [...RECENT, ...EARLIER];

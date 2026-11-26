@@ -33,7 +33,7 @@ function sparkPoints(values) {
     .join(" ");
 }
 
-export default function App() {
+export default function App({ demo = false, onExitDemo }) {
   const {
     expenses,
     months,
@@ -44,7 +44,7 @@ export default function App() {
     labelExpense,
     updateExpense,
     deleteExpense,
-  } = useExpenses();
+  } = useExpenses({ demo });
   const [nav, setNav] = useState("overview");
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState(null); // transaction being edited
@@ -71,7 +71,8 @@ export default function App() {
 
   return (
     <div className="grid min-h-screen grid-cols-[232px_1fr]">
-      <Sidebar active={nav} onNavigate={setNav} unlabeledCount={a.unlabeled.length} />
+      {demo && <DemoBanner onExit={onExitDemo} />}
+      <Sidebar active={nav} onNavigate={setNav} unlabeledCount={a.unlabeled.length} demo={demo} />
 
       <main className="pb-16">
         <TopBar
@@ -277,6 +278,34 @@ function MethodSplit({ upi, card, total }) {
       <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-surface2">
         <div style={{ width: `${upiPct}%`, background: "linear-gradient(90deg,#5E6AD2,#828FFF)" }} />
         <div style={{ width: `${cardPct}%`, background: "#A78BFA" }} />
+      </div>
+    </div>
+  );
+}
+
+// Floating notice for the public walkthrough. Deliberately `fixed` so it sits
+// outside the dashboard grid and cannot shift the real layout, and worded so a
+// visitor is never misled into thinking these are somebody's actual finances.
+// Edits made here are real in the UI but local to the tab - useExpenses gates
+// every write on source === "live".
+function DemoBanner({ onExit }) {
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4">
+      <div className="pointer-events-auto flex max-w-[min(92vw,640px)] flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-full border border-accent-soft bg-surface2/95 px-4 py-2.5 shadow-lg backdrop-blur">
+        <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-accent2">
+          Demo
+        </span>
+        <span className="text-[12.5px] text-muted">
+          Sample data, not real transactions. Changes you make stay in this tab.
+        </span>
+        {onExit && (
+          <button
+            onClick={onExit}
+            className="text-[12.5px] font-semibold text-accent2 hover:underline"
+          >
+            Exit demo
+          </button>
+        )}
       </div>
     </div>
   );

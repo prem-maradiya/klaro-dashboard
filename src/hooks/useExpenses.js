@@ -15,7 +15,12 @@ const prevOf = ({ year, month }) =>
 // the selected + previous month's expenses (for the MoM deltas) plus all
 // unlabeled ones — so the dashboard scales to years of history.
 // Falls back to demo data if the backend is unreachable or empty.
-export function useExpenses() {
+//
+// `demo: true` forces that same demo state deliberately, for the public
+// walkthrough reached from the landing page. It is the identical code path the
+// offline fallback already used, so the demo exercises the real dashboard
+// rather than a separate mock of it.
+export function useExpenses({ demo = false } = {}) {
   const [expenses, setExpenses] = useState([]);
   const [months, setMonths] = useState([]); // [{year, month}] newest first
   const [picked, setPicked] = useState(null); // user-chosen {year, month} or null
@@ -28,6 +33,21 @@ export function useExpenses() {
   const reload = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
+    // Demo mode never calls the API at all: there is no session to authenticate
+    // with, and the whole point is to show the dashboard to someone who has not
+    // signed up. Mutations below are already gated on source === "live", so
+    // edits made while exploring stay local to the browser tab.
+    if (demo) {
+      const available = getAvailableMonths(DEMO_EXPENSES);
+      setExpenses(DEMO_EXPENSES);
+      setMonths(available);
+      setSelected(picked || available[0] || null);
+      setSource("demo");
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
     (async () => {
       setLoading(true);
@@ -76,7 +96,7 @@ export function useExpenses() {
     return () => {
       cancelled = true;
     };
-  }, [picked, tick]);
+  }, [picked, tick, demo]);
 
   // Label an unknown expense. Optimistic update; syncs to backend if live.
   const labelExpense = useCallback(

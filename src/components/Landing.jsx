@@ -1,6 +1,6 @@
 import {
   ArrowRight, ShieldCheck, Smartphone, Zap, WifiOff, GitBranch,
-  MessageSquare, Cpu, LayoutDashboard, Check, FlaskConical, Code2,
+  MessageSquare, Cpu, LayoutDashboard, Check, FlaskConical, Code2, PlayCircle,
 } from "lucide-react";
 
 // lucide dropped its brand icons, so the GitHub mark is inlined here - same
@@ -19,11 +19,11 @@ function GithubMark({ className = "" }) {
 // It lives inside the React bundle rather than as a static page at the root so
 // that window.location.origin stays the OAuth/password-reset redirect target.
 // Moving the SPA to /app would have silently broken both.
-export default function Landing({ onSignIn }) {
+export default function Landing({ onSignIn, onDemo }) {
   return (
     <div className="min-h-screen bg-bg text-text">
       <Nav onSignIn={onSignIn} />
-      <Hero onSignIn={onSignIn} />
+      <Hero onSignIn={onSignIn} onDemo={onDemo} />
       <HowItWorks />
       <Privacy />
       <Features />
@@ -88,7 +88,7 @@ function Nav({ onSignIn }) {
   );
 }
 
-function Hero({ onSignIn }) {
+function Hero({ onSignIn, onDemo }) {
   return (
     <section className="mx-auto max-w-5xl px-5 pb-16 pt-16 sm:pt-24">
       <div className="inline-flex items-center gap-2 rounded-full border border-accent-soft bg-accent-soft px-3 py-1 text-[12px] font-medium text-accent2">
@@ -107,13 +107,15 @@ function Hero({ onSignIn }) {
         message ever leaves your device.
       </p>
 
+      {/* The demo leads, not sign-in: a first-time visitor should be able to use
+          the thing before being asked for an email. */}
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <button
-          onClick={onSignIn}
+          onClick={onDemo}
           className="flex items-center gap-2 rounded-lg px-5 py-2.5 text-[14px] font-semibold text-white"
           style={{ background: "linear-gradient(135deg,#5E6AD2,#828FFF)" }}
         >
-          Open the dashboard <ArrowRight size={15} />
+          <PlayCircle size={16} /> Try the live demo
         </button>
         <a
           href="https://klaro-api.vercel.app/docs"
@@ -125,14 +127,23 @@ function Hero({ onSignIn }) {
         </a>
       </div>
 
-      <DashboardPreview />
+      <p className="mt-3.5 text-[12.5px] text-muted2">
+        No sign-up needed &mdash; the demo opens the real dashboard on sample data. Already have an
+        account?{" "}
+        <button onClick={onSignIn} className="font-medium text-accent2 hover:underline">
+          Sign in
+        </button>
+        .
+      </p>
+
+      <DashboardPreview onDemo={onDemo} />
     </section>
   );
 }
 
 // A CSS mock of the real dashboard rather than a screenshot: it never goes
 // stale against the UI, stays crisp on any display, and ships no image bytes.
-function DashboardPreview() {
+function DashboardPreview({ onDemo }) {
   const bars = [38, 64, 31, 78, 52, 88, 45, 70, 58, 92, 41, 66];
   const cats = [
     { label: "Food", pct: 34, color: "#5E6AD2" },
@@ -190,9 +201,19 @@ function DashboardPreview() {
           </div>
         </div>
       </div>
-      <p className="border-t border-border px-4 py-2.5 text-[11px] text-muted2">
-        Illustrative figures &mdash; your dashboard is built from your own transactions.
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2.5">
+        <p className="text-[11px] text-muted2">
+          A sketch of the layout &mdash; your dashboard is built from your own transactions.
+        </p>
+        {onDemo && (
+          <button
+            onClick={onDemo}
+            className="flex items-center gap-1.5 text-[11.5px] font-medium text-accent2 hover:underline"
+          >
+            Open the real one <ArrowRight size={12} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -19,6 +19,25 @@ export default function AuthGate() {
     () => typeof window !== "undefined" && window.location.hash === "#signin"
   );
 
+  // "#demo" opens the walkthrough directly, which makes it a linkable URL for a
+  // CV or a message rather than something only reachable by clicking around.
+  const [demo, setDemo] = useState(
+    () => typeof window !== "undefined" && window.location.hash === "#demo"
+  );
+
+  function enterDemo() {
+    if (typeof window !== "undefined") window.location.hash = "demo";
+    setDemo(true);
+  }
+
+  function exitDemo() {
+    if (typeof window !== "undefined") {
+      // Clear the fragment without reloading or leaving "#" behind.
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+    setDemo(false);
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
@@ -35,9 +54,12 @@ export default function AuthGate() {
 
   if (session) return <App />;
 
+  // Demo is checked before the login form so that "#demo" wins on a cold load.
+  if (demo) return <App demo onExitDemo={exitDemo} />;
+
   return showLogin ? (
     <Login onBack={() => setShowLogin(false)} />
   ) : (
-    <Landing onSignIn={() => setShowLogin(true)} />
+    <Landing onSignIn={() => setShowLogin(true)} onDemo={enterDemo} />
   );
 }
